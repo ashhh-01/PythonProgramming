@@ -67,5 +67,3 @@ def playGame():
 while input("Do you want to play Blackjack 'y' or 'n':\n")=="y":
     os.system("cls")
     playGame()
-
-
