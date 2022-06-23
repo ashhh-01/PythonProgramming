@@ -1,28 +1,28 @@
-from art import logo
+import os
 import random
-print(logo)
-gameOver=False
+from art import logo
 
 def dealCards():
-    """Returns a random card from the Deck"""
-    cards=[11,2,3,4,5,6,7,8,9,10,10,10,10] #King,Queen,Jack all count as 10 and ace as 11 or 1
+    cards=[11,2,3,4,5,6,7,8,9,10,10,10,10] #King,Queen,Jack are represented by 10 and Ace by 11
     card=random.choice(cards)
     return card
 
-#Blackjack(0)-->11 + 10 [WIN]
-def calculateScore(cards):
+def scoreCalculation(cards):
     if sum(cards)==21 and len(cards)==2:
-        return 0
+        return 0  #Blackjack Ace(11)+10=21 [WIN]
     if 11 in cards and sum(cards)>21:
         cards.remove(11)
         cards.append(1)
-    return sum(cards)
+    return sum(cards) 
 
 def compare(userScore,computerScore):
+    """Function to compare User and Computer Scores"""
     if userScore>21 and computerScore>21:
-        return "You went Over you lose ;("
+        return "You went Over!You lose ;("
     elif userScore<21 and computerScore>21:
         return "You Win :)"
+    elif userScore>21 and computerScore<21:
+        return "You Went over!You Lose ;("
     elif userScore==computerScore:
         return "Draw -_-"
     elif userScore==0:
@@ -33,31 +33,39 @@ def compare(userScore,computerScore):
         return "You Win :)"
     else:
         return "You Lose ;("
-userCard=[]
-computerCard=[]
 
-for _ in range(2):
-    userCard.append(dealCards())
-    computerCard.append(dealCards())
+def playGame():
+    print(logo)
+    userCards=[]
+    computerCards=[]
 
-while not gameOver:
-    userScore=calculateScore(userCard)
-    computerScore=calculateScore(computerCard)
-    print(f"Your Cards: {userCard} and Your Score: {userScore}")
-    print(f"Opponent's first Card {computerCard[0]}")
+    for _ in range(2):
+        userCards.append(dealCards())
+        computerCards.append(dealCards())
 
-    if userScore==0 or computerScore==0 or userScore>21:
-        gameOver=True
-    else:
-        userDeal=input("Type 'y' to deal or 'n' to pass.")
-        if userDeal=="y":
-            userCard.append(dealCards())
+    gameisOver=False
+    while not gameisOver:   
+        userScore=scoreCalculation(userCards)
+        computerScore=scoreCalculation(computerCards)
+        print(f"Your cards: {userCards} and Score: {userScore}")
+        print(f"Oppenent's first card: {computerCards[0]}")
+        if userScore==0 or computerScore==0 or userScore>21:
+            gameisOver=True #WIN
         else:
-            gameOver=True
+            userDeal=input("Type 'y' to deal and 'n' to pass:\n")
+            if userDeal=="y":
+                userCards.append(dealCards())
+            else:
+                gameisOver=True
+    while computerScore!= 0 and computerScore<17:
+        computerCards.append(dealCards())
+        computerScore=scoreCalculation(computerCards)
+    print(f"Your final cards: {userCards} and Score: {userScore}")
+    print(f"Opponents cards: {computerCards} and score: {computerScore}")
+    print(compare(userScore,computerScore))
 
-while computerScore!=0 and computerScore<17:
-    computerCard.append(dealCards())
-    computerScore=calculateScore(computerCard)
-print(f"Your final cards: {userCard} and Score: {userScore}")
-print(f"Opponent's cards: {computerCard} and Opponent's Score: {computerScore}")
-print(compare(userScore,computerScore))
+while input("Do you want to play Blackjack 'y' or 'n':\n")=="y":
+    os.system("cls")
+    playGame()
+
+
