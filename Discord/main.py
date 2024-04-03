@@ -1,8 +1,7 @@
 import discord
 import os 
 from dotenv import load_dotenv
-load_dotenv(".env")
-
+load_dotenv(".\Python Env\env\.env")
 client = discord.Client(intents=discord.Intents.default())
 
 class MyClient(discord.Client):
